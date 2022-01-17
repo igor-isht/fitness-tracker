@@ -1,14 +1,16 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    training_type: str
-    duration: float
-    distance: float
-    speed: float
-    calories: float
+    def __init__(self,
+                 training_type: str,
+                 duration: float,
+                 distance: float,
+                 speed: float,
+                 calories: float) -> None:
+        self.training_type = training_type
+        self.duration = duration
+        self.distance = distance
+        self.speed = speed
+        self.calories = calories
 
     def get_message(self) -> str:
         duration = format(self.duration, '.3f')
@@ -23,15 +25,20 @@ class InfoMessage:
         return message
 
 
-@dataclass
 class Training:
     """Базовый класс тренировки."""
-    action: int
-    duration: float
-    weight: float
     LEN_STEP = 0.65
     M_IN_KM = 1000
     MIN_IN_HOUR = 60
+
+    def __init__(self,
+                 action: int,
+                 duration: float,
+                 weight: float,
+                 ) -> None:
+        self.action = action
+        self.duration = duration
+        self.weight = weight
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -46,8 +53,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        raise NotImplementedError(f'Переопределите метод get_spent_calories()'
-                                  f' в {type(self).__name__}')
+        pass
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -144,10 +150,7 @@ def read_package(workout_type: str, data: list) -> Training:
         'RUN': Running,
         'WLK': SportsWalking
     }
-    if workout_type in training_types_dict:
-        return training_types_dict[workout_type](*data)
-    else:
-        raise KeyError(f'Код тренировки {workout_type} не описан')
+    return training_types_dict[workout_type](*data)
 
 
 def main(training: Training) -> None:
@@ -161,7 +164,6 @@ if __name__ == '__main__':
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
-
     ]
 
     for workout_type, data in packages:
