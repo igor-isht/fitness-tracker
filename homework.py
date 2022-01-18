@@ -144,10 +144,10 @@ def read_package(workout_type: str, data: list) -> Training:
         'RUN': Running,
         'WLK': SportsWalking
     }
-    if workout_type in training_types_dict:
-        return training_types_dict[workout_type](*data)
-    else:
+    if workout_type not in training_types_dict:
         raise KeyError(f'Код тренировки {workout_type} не описан')
+    else:
+        return training_types_dict[workout_type](*data)
 
 
 def main(training: Training) -> None:
